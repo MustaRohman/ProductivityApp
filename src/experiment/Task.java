@@ -79,6 +79,13 @@ public class Task extends JPanel{
 		
 	}
 	
+	public String getTask(){
+		return taskLbl.getText();
+	}
+	
+	public String getTime(){
+		return timeLbl.getText();
+	}
 
 
 }

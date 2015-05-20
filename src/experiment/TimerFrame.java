@@ -3,6 +3,7 @@ package experiment;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -14,9 +15,10 @@ public class TimerFrame extends JFrame{
 
 	private JPanel mainPanel;
 
+	private ArrayList<JPanel> tasks;
 	
 	public TimerFrame(){
-		setSize(300,300);
+		setSize(222,100);
 		
 		setFrame();
 		
@@ -27,6 +29,8 @@ public class TimerFrame extends JFrame{
 	}
 	
 	public void setFrame(){
+		tasks = new ArrayList<JPanel>();
+		
 		JMenuBar menuBar = new JMenuBar();
 		JMenuItem addJmi = new JMenuItem("Add Task");
 		addJmi.addActionListener(new ActionListener(){
@@ -48,7 +52,8 @@ public class TimerFrame extends JFrame{
 		
 		JPanel newTask = new Task("Test", "Random");
 		mainPanel.add(newTask);
-		repaint();
+		tasks.add(newTask);
+		pack();
 		
 	}
 	
