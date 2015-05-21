@@ -1,13 +1,15 @@
-package experiment;
+package main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -22,14 +24,14 @@ public class Task extends JPanel{
 	private JLabel taskLbl;
 	private double startTime;
 	private double endTime;
-	private double duration;
+	private long duration;
 	private boolean timerOn;
 	private String taskName;
 	private String taskCategory;
 	
 	public Task(String name, String category){
 		
-		setSize(300,100);
+		setSize(400,100);
 		taskCategory = category;
 		taskName = name;
 		
@@ -44,7 +46,7 @@ public class Task extends JPanel{
 	public void setWidgets(){
 		
 		taskLbl = new JLabel(taskName);
-		timerBtn = new JButton("Timer");
+		timerBtn = new JButton("Off");
 		timerBtn.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
@@ -52,12 +54,16 @@ public class Task extends JPanel{
 					startTime = System.currentTimeMillis();
 					timerOn = true;
 					timerBtn.setBackground(Color.GREEN);
+					timerBtn.setText("On");
 				} else {
 					endTime = System.currentTimeMillis();
 					duration += endTime - startTime;
-					timeLbl.setText(duration/1000 + "");
+					long minutes = TimeUnit.MILLISECONDS.toMinutes(duration);
+					long hours =  TimeUnit.MILLISECONDS.toHours(duration);
+					timeLbl.setText(hours + ":" + minutes);
 					timerOn = false;
 					timerBtn.setBackground(Color.RED);
+					timerBtn.setText("Off");
 				}
 			}
 
@@ -65,7 +71,7 @@ public class Task extends JPanel{
 		});
 		
 			
-		timeLbl = new JLabel("0.00");
+		timeLbl = new JLabel("0:0");
 		
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(0,3));
@@ -85,6 +91,17 @@ public class Task extends JPanel{
 	
 	public String getTime(){
 		return timeLbl.getText();
+	}
+	
+	public static double round(double value, int places){
+		if (places < 0){
+			throw new IllegalArgumentException();
+		} else {
+			
+			BigDecimal bd = new BigDecimal((value));
+			bd = bd.setScale(places, RoundingMode.HALF_UP);
+			return bd.doubleValue();
+		}
 	}
 
 

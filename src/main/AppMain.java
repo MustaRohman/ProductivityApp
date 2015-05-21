@@ -1,4 +1,4 @@
-package experiment;
+package main;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -11,13 +11,13 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
-public class TimerFrame extends JFrame{
+public class AppMain extends JFrame{
 
 	private JPanel mainPanel;
 
 	private ArrayList<JPanel> tasks;
 	
-	public TimerFrame(){
+	public AppMain(){
 		setSize(222,100);
 		
 		setFrame();
@@ -59,7 +59,7 @@ public class TimerFrame extends JFrame{
 	
 	public static void main (String args[]){
 		
-		new TimerFrame();
+		new AppMain();
 	}
 	
 }
