@@ -50,7 +50,7 @@ public class AppMain extends JFrame{
 	
 	public void addTask(){
 		
-		JPanel newTask = new Task("Test", "Random");
+		JPanel newTask = new Task("Test", "Education");
 		mainPanel.add(newTask);
 		tasks.add(newTask);
 		pack();

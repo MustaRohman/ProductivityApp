@@ -5,13 +5,13 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 public class Task extends JPanel{
 	
@@ -22,6 +22,7 @@ public class Task extends JPanel{
 	private JButton stopBtn;
 	private JLabel timeLbl;
 	private JLabel taskLbl;
+	private JLabel catLbl;
 	private double startTime;
 	private double endTime;
 	private long duration;
@@ -31,7 +32,7 @@ public class Task extends JPanel{
 	
 	public Task(String name, String category){
 		
-		setSize(400,100);
+		setSize(500,100);
 		taskCategory = category;
 		taskName = name;
 		
@@ -44,7 +45,9 @@ public class Task extends JPanel{
 	}
 	
 	public void setWidgets(){
-		
+		catLbl = new JLabel("<html><font color='gray'>" +taskCategory + "</font></html>");
+		Border emptyBorder = BorderFactory.createEmptyBorder(0,5,0,20);
+		catLbl.setBorder(BorderFactory.createCompoundBorder(emptyBorder,null));
 		taskLbl = new JLabel(taskName);
 		timerBtn = new JButton("Off");
 		timerBtn.addActionListener(new ActionListener(){
@@ -74,7 +77,8 @@ public class Task extends JPanel{
 		timeLbl = new JLabel("0:0");
 		
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new GridLayout(0,3));
+		mainPanel.setLayout(new GridLayout(0,4));
+		mainPanel.add(catLbl);
 		mainPanel.add(taskLbl);
 		mainPanel.add(timeLbl);
 		mainPanel.add(timerBtn);
@@ -93,16 +97,7 @@ public class Task extends JPanel{
 		return timeLbl.getText();
 	}
 	
-	public static double round(double value, int places){
-		if (places < 0){
-			throw new IllegalArgumentException();
-		} else {
-			
-			BigDecimal bd = new BigDecimal((value));
-			bd = bd.setScale(places, RoundingMode.HALF_UP);
-			return bd.doubleValue();
-		}
-	}
+
 
 
 }
