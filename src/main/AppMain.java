@@ -9,6 +9,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class AppMain extends JFrame{
@@ -36,7 +37,9 @@ public class AppMain extends JFrame{
 		addJmi.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
-				addTask();
+				JPanel newTask = new NewTask();
+				int result = JOptionPane.showConfirmDialog(null, newTask, "Please enter new task details",
+						JOptionPane.OK_CANCEL_OPTION);
 			}
 			
 		});

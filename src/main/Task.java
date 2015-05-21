@@ -15,7 +15,7 @@ import javax.swing.border.Border;
 
 public class Task extends JPanel{
 	
-	private static String[] categories = {"Exercise", "Work", "Study"};
+	public static String[] categories = {"Exercise", "Work", "Study"};
 	
 	private JButton startBtn;
 	private JButton timerBtn;
@@ -40,13 +40,12 @@ public class Task extends JPanel{
 		duration = 0;
 		setWidgets();
 		
-		setVisible(true);
 		
 	}
 	
 	public void setWidgets(){
 		catLbl = new JLabel("<html><font color='gray'>" +taskCategory + "</font></html>");
-		Border emptyBorder = BorderFactory.createEmptyBorder(0,5,0,20);
+		Border emptyBorder = BorderFactory.createEmptyBorder(0,2,0,20);
 		catLbl.setBorder(BorderFactory.createCompoundBorder(emptyBorder,null));
 		taskLbl = new JLabel(taskName);
 		timerBtn = new JButton("Off");
@@ -58,11 +57,12 @@ public class Task extends JPanel{
 					timerOn = true;
 					timerBtn.setBackground(Color.GREEN);
 					timerBtn.setText("On");
-				} else {
+				} else {    
 					endTime = System.currentTimeMillis();
 					duration += endTime - startTime;
 					long minutes = TimeUnit.MILLISECONDS.toMinutes(duration);
 					long hours =  TimeUnit.MILLISECONDS.toHours(duration);
+					
 					timeLbl.setText(hours + ":" + minutes);
 					timerOn = false;
 					timerBtn.setBackground(Color.RED);
