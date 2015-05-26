@@ -53,5 +53,13 @@ public class NewTask extends JPanel {
 		
 	}
 	
+	public String getText(){
+		return nameFld.getText();
+	}
+	
+	public String getSelection(){
+		return categoryBox.getSelectedItem().toString();
+	}
+	
 
 }

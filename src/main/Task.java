@@ -1,16 +1,21 @@
 package main;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.border.Border;
 
 public class Task extends JPanel{
@@ -32,23 +37,63 @@ public class Task extends JPanel{
 	
 	public Task(String name, String category){
 		
-		setSize(500,100);
+		setSize(800,100);
 		taskCategory = category;
 		taskName = name;
+		
 		
 		timerOn = false;
 		duration = 0;
 		setWidgets();
+		
+		addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 		
 		
 	}
 	
 	public void setWidgets(){
 		catLbl = new JLabel("<html><font color='gray'>" +taskCategory + "</font></html>");
-		Border emptyBorder = BorderFactory.createEmptyBorder(0,2,0,20);
-		catLbl.setBorder(BorderFactory.createCompoundBorder(emptyBorder,null));
+		Border empty = BorderFactory.createEmptyBorder(5,2,5,10);
+		Border emptyBorder = BorderFactory.createCompoundBorder(empty,null);
+		catLbl.setBorder(emptyBorder);
+		
 		taskLbl = new JLabel(taskName);
+		taskLbl.setBorder(emptyBorder);
+		
 		timerBtn = new JButton("Off");
+		timerBtn.setBorder(emptyBorder);
 		timerBtn.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
@@ -75,17 +120,33 @@ public class Task extends JPanel{
 		
 			
 		timeLbl = new JLabel("0:0");
+		timeLbl.setBorder(emptyBorder);
 		
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new GridLayout(0,4));
-		mainPanel.add(catLbl);
-		mainPanel.add(taskLbl);
-		mainPanel.add(timeLbl);
-		mainPanel.add(timerBtn);
+		//JPanel mainPanel = new JPanel();
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.gridx = 0;
+		c.gridy = 0;
+		c.insets = new Insets(5,5,5,5);
+		c.gridwidth = 1;
+		c.weightx = 1;
+		add(catLbl,c);
+		
+		c.gridy = 1;
+		c.insets = new Insets(5,5,5,5);
+		add(taskLbl);
+		
+		c.gridy = 2;
+		c.insets = new Insets(5,5,5,5);
+		add(timeLbl);
+		
+		c.gridy = 3;
+		c.insets = new Insets(5,5,5,5);
+		add(timerBtn);
 		
 		
-		add(mainPanel, BorderLayout.CENTER);
-		
+
 		
 	}
 	
@@ -97,6 +158,25 @@ public class Task extends JPanel{
 		return timeLbl.getText();
 	}
 	
+	
+	
+	
+	//Inner class for the popmenu
+	public class PopUp extends JPopupMenu{
+		
+		private JMenuItem editItem;
+		private JMenuItem deleteItem;
+		
+		public PopUp(){
+			editItem = new JMenuItem("Edit");
+			deleteItem = new JMenuItem("Delete");
+			
+			add(editItem);
+			add(deleteItem);
+		}
+		
+		
+	}
 
 
 
