@@ -77,7 +77,7 @@ public class Task extends JPanel{
 					
 					timeLbl.setText(hours + ":" + minutes);
 					timerOn = false;
-					timerBtn.setBackground(Color.RED);
+					timerBtn.setBackground(new JButton().getBackground());
 					timerBtn.setText("Off");
 				}
 			}

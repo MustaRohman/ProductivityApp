@@ -134,13 +134,16 @@ public class AppMain extends JFrame{
 			if (panel.equals(p)){
 				tasks.remove(p);
 				mainPanel.remove(p);
+				mainPanel.revalidate();
+				mainPanel.updateUI();
+				repaint();
+				pack();
+				System.out.println("Packed");
 				return p;
 			}
 		}
 		
-		mainPanel.revalidate();
-		repaint();
-		pack();
+		
 		return null;
 		
 	}
