@@ -46,39 +46,6 @@ public class Task extends JPanel{
 		duration = 0;
 		setWidgets();
 		
-		addMouseListener(new MouseListener(){
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		});
 		
 		
 	}
@@ -150,6 +117,10 @@ public class Task extends JPanel{
 		
 	}
 	
+	public String toString(){
+		return taskLbl.getText();
+	}
+	
 	public String getTask(){
 		return taskLbl.getText();
 	}
@@ -158,26 +129,6 @@ public class Task extends JPanel{
 		return timeLbl.getText();
 	}
 	
-	
-	
-	
-	//Inner class for the popmenu
-	public class PopUp extends JPopupMenu{
-		
-		private JMenuItem editItem;
-		private JMenuItem deleteItem;
-		
-		public PopUp(){
-			editItem = new JMenuItem("Edit");
-			deleteItem = new JMenuItem("Delete");
-			
-			add(editItem);
-			add(deleteItem);
-		}
-		
-		
-	}
-
 
 
 }

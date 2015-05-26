@@ -1,8 +1,11 @@
 package main;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -11,6 +14,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 public class AppMain extends JFrame{
 
@@ -23,6 +27,9 @@ public class AppMain extends JFrame{
 		setSize(400,100);
 		
 		setFrame();
+		
+		
+		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -67,11 +74,129 @@ public class AppMain extends JFrame{
 	public void addTask(String name, String category){
 		
 		JPanel newTask = new Task(name, category);
+		newTask.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//Checks if the correct mouse button has been pressed for pop menu
+				if (e.isPopupTrigger()){
+					doPop(e);
+				}
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()){
+					doPop(e);
+				}
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()){
+					doPop(e);
+				}
+				
+			}
+			
+			private void doPop(MouseEvent e){
+				PopUp menu = new PopUp(e.getComponent());
+				menu.show(e.getComponent(), e.getX(), e.getY());
+				
+				
+			}
+			
+		});
 		mainPanel.add(newTask);
 		tasks.add(newTask);
 		pack();
 		
 	}
+	
+	public JPanel deleteTask(Component c){
+		
+		JPanel panel = (JPanel) c;
+		
+		for (JPanel p: tasks){
+			if (panel.equals(p)){
+				tasks.remove(p);
+				mainPanel.remove(p);
+				return p;
+			}
+		}
+		
+		mainPanel.revalidate();
+		repaint();
+		pack();
+		return null;
+		
+	}
+	
+	//Inner class for the popmenu
+		public class PopUp extends JPopupMenu{
+			
+			private JMenuItem editItem;
+			private JMenuItem deleteItem;
+			private Component comp;
+			
+			public PopUp(Component c){
+				comp = c;
+				editItem = new JMenuItem("Edit");
+				deleteItem = new JMenuItem("Delete");
+				deleteItem.addMouseListener(new MouseListener(){
+
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void mouseExited(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void mousePressed(MouseEvent e) {
+						System.out.println(deleteTask(c) + " deleted");
+						
+					}
+
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+				});
+				
+				add(editItem);
+				add(deleteItem);
+			}
+			
+			
+		}
+
 	
 	public static void main (String args[]){
 		
