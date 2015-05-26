@@ -52,15 +52,14 @@ public class Task extends JPanel{
 	
 	public void setWidgets(){
 		catLbl = new JLabel("<html><font color='gray'>" +taskCategory + "</font></html>");
-		Border empty = BorderFactory.createEmptyBorder(5,2,5,10);
-		Border emptyBorder = BorderFactory.createCompoundBorder(empty,null);
+		Border empty = BorderFactory.createEmptyBorder(5,5,5,10 );
+		Border emptyBorder = BorderFactory.createCompoundBorder(empty, null);
 		catLbl.setBorder(emptyBorder);
 		
 		taskLbl = new JLabel(taskName);
 		taskLbl.setBorder(emptyBorder);
 		
 		timerBtn = new JButton("Off");
-		timerBtn.setBorder(emptyBorder);
 		timerBtn.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
@@ -112,8 +111,6 @@ public class Task extends JPanel{
 		c.insets = new Insets(5,5,5,5);
 		add(timerBtn);
 		
-		
-
 		
 	}
 	

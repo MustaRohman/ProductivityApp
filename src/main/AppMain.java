@@ -28,9 +28,6 @@ public class AppMain extends JFrame{
 		
 		setFrame();
 		
-		
-		
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		
@@ -63,7 +60,7 @@ public class AppMain extends JFrame{
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		//Set to BoxLayout.Y_AXIS so that we can add new task panels to the bottom of the list
 		
-		add(BorderLayout.CENTER, mainPanel);
+		add(BorderLayout.NORTH, mainPanel);
 	}
 	
 	/**
