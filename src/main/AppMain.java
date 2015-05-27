@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -42,7 +44,7 @@ public class AppMain extends JFrame{
 		addJmi.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
-				NewTask newTask = new NewTask();
+				TaskDialog newTask = new TaskDialog();
 				//New task dialog panel
 				
 				int result = JOptionPane.showConfirmDialog(null, newTask, "Please enter new task details",
@@ -71,6 +73,8 @@ public class AppMain extends JFrame{
 	public void addTask(String name, String category){
 		
 		JPanel newTask = new Task(name, category);
+		
+		//Creates popup menu when right clicked
 		newTask.addMouseListener(new MouseListener(){
 
 			@Override
@@ -110,6 +114,8 @@ public class AppMain extends JFrame{
 			}
 			
 			private void doPop(MouseEvent e){
+				Task selectedTask = (Task) e.getComponent();
+				selectedTask.setBorder(BorderFactory.createLineBorder(Color.blue));
 				PopUp menu = new PopUp(e.getComponent());
 				menu.show(e.getComponent(), e.getX(), e.getY());
 				
@@ -155,6 +161,46 @@ public class AppMain extends JFrame{
 			public PopUp(Component c){
 				comp = c;
 				editItem = new JMenuItem("Edit");
+				editItem.addMouseListener(new MouseListener(){
+
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void mouseExited(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void mousePressed(MouseEvent e) {
+						Task selectedTask = (Task) comp;
+						System.out.println(selectedTask.toString());
+						TaskDialog editTask = new TaskDialog(selectedTask.toString(), selectedTask.getCategory());
+						int result = JOptionPane.showConfirmDialog(null, editTask, "Edit Task Information",
+								JOptionPane.OK_CANCEL_OPTION);
+						if (result == JOptionPane.OK_OPTION){
+							addTask(editTask.getText(), editTask.getSelection());
+						}
+						
+					}
+
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+				});
 				deleteItem = new JMenuItem("Delete");
 				deleteItem.addMouseListener(new MouseListener(){
 

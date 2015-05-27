@@ -9,22 +9,29 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class NewTask extends JPanel {
+public class TaskDialog extends JPanel {
 	
 	private JLabel nameLbl;
 	private JTextField nameFld;
 	private JLabel categoryLbl;
 	private JComboBox categoryBox;
 	
-	public NewTask(){
-		setSize(200,200);
-		setWidgets();
-		
-		
+	public TaskDialog(){
+		setFrame();
 		
 	}
 	
-	public void setWidgets(){
+	public TaskDialog(String name, String cat){
+		setFrame();
+		
+		nameFld.setText(name);
+		categoryBox.setSelectedItem(cat);
+	}
+	
+	public void setFrame(){
+		
+		setSize(200,200);
+		
 		setLayout(new GridBagLayout());
 		GridBagConstraints cs = new GridBagConstraints();
 		

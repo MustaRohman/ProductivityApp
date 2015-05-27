@@ -20,11 +20,9 @@ import javax.swing.border.Border;
 
 public class Task extends JPanel{
 	
-	public static String[] categories = {"Exercise", "Work", "Study"};
+	public static String[] categories = {"Health", "Work", "Study", "Entertainment"};
 	
-	private JButton startBtn;
 	private JButton timerBtn;
-	private JButton stopBtn;
 	private JLabel timeLbl;
 	private JLabel taskLbl;
 	private JLabel catLbl;
@@ -68,6 +66,8 @@ public class Task extends JPanel{
 					timerOn = true;
 					timerBtn.setBackground(Color.GREEN);
 					timerBtn.setText("On");
+					
+					setBorder(BorderFactory.createDashedBorder(Color.GREEN));
 				} else {    
 					endTime = System.currentTimeMillis();
 					duration += endTime - startTime;
@@ -78,6 +78,8 @@ public class Task extends JPanel{
 					timerOn = false;
 					timerBtn.setBackground(new JButton().getBackground());
 					timerBtn.setText("Off");
+					
+					setBorder(null);
 				}
 			}
 
@@ -118,12 +120,13 @@ public class Task extends JPanel{
 		return taskLbl.getText();
 	}
 	
-	public String getTask(){
-		return taskLbl.getText();
-	}
 	
 	public String getTime(){
 		return timeLbl.getText();
+	}
+	
+	public String getCategory(){
+		return catLbl.getText();
 	}
 	
 
