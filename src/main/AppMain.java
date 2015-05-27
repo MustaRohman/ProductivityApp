@@ -93,7 +93,6 @@ public class AppMain extends JFrame{
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 
@@ -114,11 +113,8 @@ public class AppMain extends JFrame{
 			}
 			
 			private void doPop(MouseEvent e){
-				Task selectedTask = (Task) e.getComponent();
-				selectedTask.setBorder(BorderFactory.createLineBorder(Color.blue));
 				PopUp menu = new PopUp(e.getComponent());
 				menu.show(e.getComponent(), e.getX(), e.getY());
-				
 				
 			}
 			

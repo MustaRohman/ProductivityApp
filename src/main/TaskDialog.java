@@ -44,6 +44,7 @@ public class TaskDialog extends JPanel {
 		add(nameLbl, cs);
 		
 		nameFld = new JTextField(20);
+		nameFld.requestFocusInWindow();
 		cs.gridx = 1;
 		cs.gridy = 0;
 		add(nameFld, cs);

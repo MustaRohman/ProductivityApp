@@ -39,6 +39,7 @@ public class Task extends JPanel{
 		taskCategory = category;
 		taskName = name;
 		
+		setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, Color.gray));
 		
 		timerOn = false;
 		duration = 0;
@@ -49,9 +50,10 @@ public class Task extends JPanel{
 	}
 	
 	public void setWidgets(){
-		catLbl = new JLabel("<html><font color='gray'>" +taskCategory + "</font></html>");
 		Border empty = BorderFactory.createEmptyBorder(5,5,5,10 );
 		Border emptyBorder = BorderFactory.createCompoundBorder(empty, null);
+		
+		catLbl = new JLabel("<html><font color='gray'>" +taskCategory + "</font></html>");	
 		catLbl.setBorder(emptyBorder);
 		
 		taskLbl = new JLabel(taskName);
@@ -134,7 +136,7 @@ public class Task extends JPanel{
 	}
 	
 	public void setCategory(String newCat){
-		catLbl.setText(newCat);
+		catLbl.setText("<html><font color='gray'>" + newCat + "</font></html>");
 	}
 
 
