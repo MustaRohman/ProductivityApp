@@ -61,12 +61,16 @@ public class TaskDialog extends JPanel {
 	}
 	
 	public String getText(){
+		System.out.println(nameFld.getText());
 		return nameFld.getText();
 	}
 	
-	public String getSelection(){
+	public String getCategory(){
+		System.out.println(categoryBox.getSelectedItem().toString());
 		return categoryBox.getSelectedItem().toString();
 	}
+	
+
 	
 
 }

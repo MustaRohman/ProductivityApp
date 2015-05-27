@@ -50,7 +50,7 @@ public class AppMain extends JFrame{
 				int result = JOptionPane.showConfirmDialog(null, newTask, "Please enter new task details",
 						JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.OK_OPTION){
-					addTask(newTask.getText(), newTask.getSelection());
+					addTask(newTask.getText(), newTask.getCategory());
 				}
 			}
 			
@@ -189,7 +189,10 @@ public class AppMain extends JFrame{
 						int result = JOptionPane.showConfirmDialog(null, editTask, "Edit Task Information",
 								JOptionPane.OK_CANCEL_OPTION);
 						if (result == JOptionPane.OK_OPTION){
-							addTask(editTask.getText(), editTask.getSelection());
+							selectedTask.setName(editTask.getText());
+							selectedTask.setCategory(editTask.getCategory());
+							repaint();
+							pack();
 						}
 						
 					}

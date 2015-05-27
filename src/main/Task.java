@@ -129,6 +129,13 @@ public class Task extends JPanel{
 		return catLbl.getText();
 	}
 	
+	public void setName(String newName){
+		taskLbl.setText(newName);
+	}
+	
+	public void setCategory(String newCat){
+		catLbl.setText(newCat);
+	}
 
 
 }
