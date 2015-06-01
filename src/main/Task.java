@@ -32,6 +32,7 @@ public class Task extends JPanel{
 	private boolean timerOn;
 	private String taskName;
 	private String taskCategory;
+	private Thread timerThread;
 	
 	public Task(String name, String category){
 		
@@ -43,13 +44,19 @@ public class Task extends JPanel{
 		
 		timerOn = false;
 		duration = 0;
+		
+		Thread newThread = new Thread(new TimeUpdate(this));
+		timerThread = newThread;
+		
 		setWidgets();
+		setLayout();
 		
 		
 		
 	}
 	
 	public void setWidgets(){
+		
 		Border empty = BorderFactory.createEmptyBorder(5,5,5,10 );
 		Border emptyBorder = BorderFactory.createCompoundBorder(empty, null);
 		
@@ -69,14 +76,16 @@ public class Task extends JPanel{
 					timerBtn.setBackground(Color.GREEN);
 					timerBtn.setText("On");
 					
+					timerThread.start();
+					
+					
 					setBorder(BorderFactory.createDashedBorder(Color.GREEN));
 				} else {    
 					endTime = System.currentTimeMillis();
 					duration += endTime - startTime;
-					long minutes = TimeUnit.MILLISECONDS.toMinutes(duration);
-					long hours =  TimeUnit.MILLISECONDS.toHours(duration);
-					
-					timeLbl.setText(hours + ":" + minutes);
+	
+					timerThread.interrupt();
+				
 					timerOn = false;
 					timerBtn.setBackground(new JButton().getBackground());
 					timerBtn.setText("Off");
@@ -92,7 +101,11 @@ public class Task extends JPanel{
 		timeLbl = new JLabel("0:0");
 		timeLbl.setBorder(emptyBorder);
 		
-		//JPanel mainPanel = new JPanel();
+			
+		
+	}
+	
+	public void setLayout(){
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -115,7 +128,19 @@ public class Task extends JPanel{
 		c.insets = new Insets(5,5,5,5);
 		add(timerBtn);
 		
-		
+	}
+	
+
+	
+	public void updateTime(){
+		duration += System.currentTimeMillis() - startTime;
+		startTime = System.currentTimeMillis();
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(duration);
+		long hours =  TimeUnit.MILLISECONDS.toHours(duration);
+	
+		timeLbl.setText(hours + ":" + minutes);
+		repaint();
+		System.out.println("Test");
 	}
 	
 	public String toString(){
