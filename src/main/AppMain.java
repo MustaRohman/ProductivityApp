@@ -18,11 +18,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import org.jfree.data.general.DefaultPieDataset;
+
 public class AppMain extends JFrame{
 
 	private JPanel mainPanel;
 
-	private ArrayList<JPanel> tasks;
+	private ArrayList<Task> tasks;
 	//keeps track of task panel objects to that we can access task information
 	
 	public AppMain(){
@@ -37,10 +39,13 @@ public class AppMain extends JFrame{
 	}
 	
 	public void setFrame(){
-		tasks = new ArrayList<JPanel>();
+		tasks = new ArrayList<Task>();
 		
 		JMenuBar menuBar = new JMenuBar();
+		
+	
 		JMenuItem addJmi = new JMenuItem("Add Task");
+		addJmi.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY));
 		addJmi.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
@@ -55,7 +60,30 @@ public class AppMain extends JFrame{
 			}
 			
 		});
+		
+		JMenuItem chartJmi = new JMenuItem("Chart");
+		chartJmi.addActionListener(new ActionListener(){
+			
+			public void actionPerformed(ActionEvent e){
+			
+				if (tasks.isEmpty()){
+					JOptionPane.showMessageDialog(null, "No tasks have been added!", 
+							"Error", JOptionPane.INFORMATION_MESSAGE);
+				} else{
+					DefaultPieDataset dataset = new DefaultPieDataset();
+					for (Task t: tasks){
+						
+						dataset.setValue(t.getCategory(), t.getTime());
+					}
+					
+					PieChart pie = new PieChart("Chart", dataset);
+				}
+				
+			}
+		});
+		
 		menuBar.add(addJmi);
+		menuBar.add(chartJmi);
 		setJMenuBar(menuBar);
 		
 		mainPanel = new JPanel();
@@ -72,7 +100,7 @@ public class AppMain extends JFrame{
 	 */
 	public void addTask(String name, String category){
 		
-		JPanel newTask = new Task(name, category);
+		Task newTask = new Task(name, category);
 		
 		//Creates popup menu when right clicked
 		newTask.addMouseListener(new MouseListener(){

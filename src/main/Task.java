@@ -123,12 +123,12 @@ public class Task extends JPanel{
 	}
 	
 	
-	public String getTime(){
-		return timeLbl.getText();
+	public double getTime(){
+		return (double) duration;
 	}
 	
 	public String getCategory(){
-		return catLbl.getText();
+		return taskCategory;
 	}
 	
 	public void setName(String newName){
