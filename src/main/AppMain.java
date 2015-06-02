@@ -28,7 +28,9 @@ public class AppMain extends JFrame{
 	//keeps track of task panel objects to that we can access task information
 	
 	public AppMain(){
-		setSize(400,100);
+		
+		super("Time Tracker");
+		setSize(300,100);
 		
 		setFrame();
 		
@@ -45,7 +47,7 @@ public class AppMain extends JFrame{
 		
 	
 		JMenuItem addJmi = new JMenuItem("Add Task");
-		addJmi.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY));
+		addJmi.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
 		addJmi.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
@@ -62,6 +64,7 @@ public class AppMain extends JFrame{
 		});
 		
 		JMenuItem chartJmi = new JMenuItem("Chart");
+		chartJmi.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 1, Color.GRAY));
 		chartJmi.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
