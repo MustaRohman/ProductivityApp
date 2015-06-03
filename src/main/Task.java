@@ -2,7 +2,7 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -79,6 +79,7 @@ public class Task extends JPanel{
 		taskLbl.setBorder(emptyBorder);
 		
 		timerBtn = new JButton("Off");
+		timerBtn.setSize(new Dimension(40,25));
 		timerBtn.setFont(font);
 		timerBtn.addActionListener(new ActionListener(){
 			
@@ -177,7 +178,10 @@ public class Task extends JPanel{
 	}
 	
 	public void setCategory(String newCat){
-		catLbl.setText("<html><font color='gray'>" + newCat + "</font></html>");
+		taskCategory = newCat;
+		setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.gray),
+				"<html><font color='gray'>" +taskCategory + "</font></html>"));
+		repaint();
 	}
 
 

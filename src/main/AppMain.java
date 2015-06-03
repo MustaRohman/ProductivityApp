@@ -3,10 +3,13 @@ package main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -31,7 +34,9 @@ public class AppMain extends JFrame{
 		
 		super("Time Tracker");
 		setSize(300,100);
+		setMinimumSize(new Dimension(300,175));
 		
+	
 		setFrame();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -272,7 +277,8 @@ public class AppMain extends JFrame{
 			
 			
 		}
-
+		
+	
 	
 	public static void main (String args[]){
 		
