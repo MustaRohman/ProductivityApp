@@ -2,13 +2,19 @@ package main;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 public class FrameListener implements WindowListener {
 	
-	private Task[] tasks;
+	private ArrayList<Task> taskList;
 	
-	public FrameListener(Task[] tasksList){
-		
+	public FrameListener(ArrayList<Task> tasks){
+		taskList = tasks;
 	}
 
 	@Override
@@ -19,13 +25,31 @@ public class FrameListener implements WindowListener {
 
 	@Override
 	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
+		File newFile = newFile = new File("C:\\Users\\Lenovo\\Documents\\task.txt");
+		
+		newFile.getParentFile().mkdirs();
+		
+		PrintWriter pw = null;
+		
+		try {
+			pw = new PrintWriter(new BufferedWriter(new FileWriter(newFile)));
+			
+			System.out.println(taskList.isEmpty());
+			
+			for (Task t : taskList){
+				printTask(t, pw);
+			}
+			
+		} catch (IOException e1) {
+			System.out.println("IO error has occured");
+		}
+		
 
 	}
 
@@ -51,6 +75,14 @@ public class FrameListener implements WindowListener {
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public void printTask(Task task, PrintWriter pw){
+		
+		String taskDetail = task.getName() + " " + task.getCategory() + " " +  task.getTime();
+		pw.println(taskDetail);
+		
+		System.out.println(taskDetail);
 	}
 
 }

@@ -10,6 +10,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -36,7 +41,10 @@ public class AppMain extends JFrame{
 		setSize(300,100);
 		setMinimumSize(new Dimension(300,175));
 		
-	
+		tasks = new ArrayList<Task>();
+		
+		addWindowListener(new FrameListener());
+		
 		setFrame();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -157,6 +165,7 @@ public class AppMain extends JFrame{
 		});
 		mainPanel.add(newTask);
 		tasks.add(newTask);
+		
 		pack();
 		
 	}
@@ -278,6 +287,81 @@ public class AppMain extends JFrame{
 			
 		}
 		
+		public class FrameListener implements WindowListener {
+			
+
+
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+				
+
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				File newFile = newFile = new File("C:\\Users\\Lenovo\\Documents\\task.txt");
+				
+				newFile.getParentFile().mkdirs();
+				
+				
+				
+				try {
+					PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(newFile)));
+					
+					System.out.println(tasks.isEmpty());
+					
+					for (Task t : tasks){
+						printTask(t, pw);
+					}
+					
+				} catch (IOException e1) {
+					System.out.println("IO error has occured");
+				}
+				
+
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+			
+			public void printTask(Task task, PrintWriter pw){
+				
+				String taskDetail = task.toString() + " " + task.getCategory() + " " +  task.getTime();
+				pw.println(taskDetail);
+				
+				pw.flush();
+				
+				System.out.println(taskDetail);
+			}
+
+		}	
 	
 	
 	public static void main (String args[]){
