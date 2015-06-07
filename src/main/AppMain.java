@@ -52,9 +52,6 @@ public class AppMain extends JFrame{
 		
 		setFrame();
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-		
 		setVisible(true);
 	}
 	
@@ -65,7 +62,6 @@ public class AppMain extends JFrame{
 		
 		JMenuBar menuBar = new JMenuBar();
 		
-	
 		JMenuItem addJmi = new JMenuItem("+");
 		addJmi.setFont(font);
 		addJmi.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
@@ -116,6 +112,9 @@ public class AppMain extends JFrame{
 		//Set to BoxLayout.Y_AXIS so that we can add new task panels to the bottom of the list
 		
 		add(BorderLayout.NORTH, mainPanel);
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 	}
 	
 	/**
@@ -221,13 +220,14 @@ public class AppMain extends JFrame{
 
 			@Override
 			public void windowOpened(WindowEvent e) {
-				if (dataFile.exists() && !dataFile.isDirectory()){
+					if (dataFile.exists() && !dataFile.isDirectory()){
 					
 					try {
 						BufferedReader br = new BufferedReader(new FileReader(dataFile));
 						String line;
 						while ((line = br.readLine()) != null){
 							String[] tempArray = line.split(" ");
+							addTask(tempArray[0], tempArray[1]);
 							
 						}
 					} catch (FileNotFoundException e1) {

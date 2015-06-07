@@ -13,7 +13,7 @@ public class FrameListener implements WindowListener {
 	
 	private ArrayList<Task> taskList;
 	
-	public FrameListener(ArrayList<Task> tasks){
+	public FrameListener(ArrayList<Task> tasks, AppMain main){
 		taskList = tasks;
 	}
 
@@ -73,7 +73,7 @@ public class FrameListener implements WindowListener {
 
 	@Override
 	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
+		
 
 	}
 	
