@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 public class FrameListener implements WindowListener {
 	
-	private ArrayList<Task> taskList;
+	private ArrayList<TaskPanel> taskList;
 	
-	public FrameListener(ArrayList<Task> tasks, AppMain main){
+	public FrameListener(ArrayList<TaskPanel> tasks, AppMain main){
 		taskList = tasks;
 	}
 
@@ -42,7 +42,7 @@ public class FrameListener implements WindowListener {
 			
 			System.out.println(taskList.isEmpty());
 			
-			for (Task t : taskList){
+			for (TaskPanel t : taskList){
 				printTask(t, pw);
 			}
 			
@@ -77,7 +77,7 @@ public class FrameListener implements WindowListener {
 
 	}
 	
-	public void printTask(Task task, PrintWriter pw){
+	public void printTask(TaskPanel task, PrintWriter pw){
 		
 		String taskDetail = task.getName() + " " + task.getCategory() + " " +  task.getTime();
 		pw.println(taskDetail);

@@ -30,12 +30,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import org.jfree.data.gantt.Task;
 import org.jfree.data.general.DefaultPieDataset;
 
 public class AppMain extends JFrame{
 
 	private JPanel mainPanel;
-	private ArrayList<Task> tasks;
+	private ArrayList<TaskPanel> tasks;
 	//keeps track of task panel objects to that we can access task information
 	
 	private static File dataFile = new File("C:\\Users\\Lenovo\\Documents\\task.txt"); ;
@@ -46,7 +47,7 @@ public class AppMain extends JFrame{
 		setSize(300,100);
 		setMinimumSize(new Dimension(300,175));
 		
-		tasks = new ArrayList<Task>();
+		tasks = new ArrayList<TaskPanel>();
 		
 		addWindowListener(new FrameListener());
 		
@@ -58,7 +59,7 @@ public class AppMain extends JFrame{
 	public void setFrame(){
 		
 		Font font = new Font("Calibri",Font.BOLD, 20);
-		tasks = new ArrayList<Task>();
+		tasks = new ArrayList<TaskPanel>();
 		
 		JMenuBar menuBar = new JMenuBar();
 		
@@ -92,7 +93,7 @@ public class AppMain extends JFrame{
 							"Error", JOptionPane.INFORMATION_MESSAGE);
 				} else{
 					DefaultPieDataset dataset = new DefaultPieDataset();
-					for (Task t: tasks){
+					for (TaskPanel t: tasks){
 						
 						dataset.setValue(t.getCategory(), t.getTime());
 					}
@@ -124,7 +125,7 @@ public class AppMain extends JFrame{
 	 */
 	public void addTask(String name, String category){
 		
-		Task newTask = new Task(name, category);
+		TaskPanel newTask = new TaskPanel(name, category);
 		
 		//Creates popup menu when right clicked
 		PopUpListener popListen = new PopUpListener(this);
@@ -135,6 +136,24 @@ public class AppMain extends JFrame{
 		
 		pack();
 		
+	}
+	
+	public TaskPanel addTask(String name, String category, String time){
+		
+		long longTime = Long.parseLong(time);
+		
+		TaskPanel newTask = new TaskPanel(name, category, longTime);
+		
+		//Creates popup menu when right clicked
+		PopUpListener popListen = new PopUpListener(this);
+		newTask.addMouseListener(popListen);
+		
+		mainPanel.add(newTask);
+		tasks.add(newTask);
+		
+		pack();
+		
+		return newTask;
 	}
 	
 	public JPanel deleteTask(Component c){
@@ -189,7 +208,7 @@ public class AppMain extends JFrame{
 					
 					System.out.println(tasks.isEmpty());
 					
-					for (Task t : tasks){
+					for (TaskPanel t : tasks){
 						printTask(t, pw);
 					}
 					
@@ -227,9 +246,10 @@ public class AppMain extends JFrame{
 						String line;
 						while ((line = br.readLine()) != null){
 							String[] tempArray = line.split(" ");
-							addTask(tempArray[0], tempArray[1]);
-							
+							TaskPanel newTask = addTask(tempArray[0], tempArray[1], tempArray[2]);
+							System.out.println(newTask.getTime());
 						}
+						
 					} catch (FileNotFoundException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -242,7 +262,7 @@ public class AppMain extends JFrame{
 
 			}
 			
-			public void printTask(Task task, PrintWriter pw){
+			public void printTask(TaskPanel task, PrintWriter pw){
 				
 				String taskDetail = task.toString() + " " + task.getCategory() + " " +  task.getTime();
 				pw.println(taskDetail);

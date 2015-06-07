@@ -6,9 +6,9 @@ import javax.swing.JLabel;
 
 public class TimeUpdate implements Runnable{
 
-	private Task task;
+	private TaskPanel task;
 	
-	public TimeUpdate(Task task){
+	public TimeUpdate(TaskPanel task){
 		
 		this.task = task;
 		

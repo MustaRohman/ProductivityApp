@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.border.Border;
 
-public class Task extends JPanel{
+public class TaskPanel extends JPanel{
 	
 	public static String[] categories = {"Health", "Work", "Study", "Entertainment"};
 	
@@ -42,7 +42,7 @@ public class Task extends JPanel{
 	 * @param name
 	 * @param category
 	 */
-	public Task(String name, String category){
+	public TaskPanel(String name, String category){
 		
 		setFrame(name, category);
 		duration = 0;
@@ -57,11 +57,11 @@ public class Task extends JPanel{
 	 * @param category
 	 * @param time
 	 */
-	public Task(String name, String category, long time){
+	public TaskPanel(String name, String category, long time){
 		
-		
-		setFrame(name, category);
 		duration = time;
+		setFrame(name, category);
+		
 		
 		
 	}
@@ -199,8 +199,8 @@ public class Task extends JPanel{
 	}
 	
 	
-	public double getTime(){
-		return (double) duration;
+	public long getTime(){
+		return duration;
 	}
 	
 	public String getCategory(){

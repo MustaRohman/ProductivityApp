@@ -39,7 +39,7 @@ public class PopUp extends JPopupMenu {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				Task selectedTask = (Task) comp;
+				TaskPanel selectedTask = (TaskPanel) comp;
 				System.out.println(selectedTask.toString());
 				TaskDialog editTask = new TaskDialog(selectedTask.toString(), selectedTask.getCategory());
 				int result = JOptionPane.showConfirmDialog(null, editTask, "Edit Task Information",

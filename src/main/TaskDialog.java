@@ -54,7 +54,7 @@ public class TaskDialog extends JPanel {
 		cs.gridy = 1;
 		add(categoryLbl, cs);
 		
-		categoryBox = new JComboBox(Task.categories);
+		categoryBox = new JComboBox(TaskPanel.categories);
 		cs.gridx = 1;
 		cs.gridy = 1;
 		add(categoryBox, cs);
