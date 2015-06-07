@@ -4,14 +4,18 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,9 +35,10 @@ import org.jfree.data.general.DefaultPieDataset;
 public class AppMain extends JFrame{
 
 	private JPanel mainPanel;
-
 	private ArrayList<Task> tasks;
 	//keeps track of task panel objects to that we can access task information
+	
+	private static File dataFile = new File("C:\\Users\\Lenovo\\Documents\\task.txt"); ;
 	
 	public AppMain(){
 		
@@ -54,12 +59,15 @@ public class AppMain extends JFrame{
 	}
 	
 	public void setFrame(){
+		
+		Font font = new Font("Calibri",Font.BOLD, 20);
 		tasks = new ArrayList<Task>();
 		
 		JMenuBar menuBar = new JMenuBar();
 		
 	
-		JMenuItem addJmi = new JMenuItem("Add Task");
+		JMenuItem addJmi = new JMenuItem("+");
+		addJmi.setFont(font);
 		addJmi.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
 		addJmi.addActionListener(new ActionListener(){
 			
@@ -77,6 +85,7 @@ public class AppMain extends JFrame{
 		});
 		
 		JMenuItem chartJmi = new JMenuItem("Chart");
+		chartJmi.setFont(font);
 		chartJmi.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 1, Color.GRAY));
 		chartJmi.addActionListener(new ActionListener(){
 			
@@ -119,50 +128,9 @@ public class AppMain extends JFrame{
 		Task newTask = new Task(name, category);
 		
 		//Creates popup menu when right clicked
-		newTask.addMouseListener(new MouseListener(){
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				//Checks if the correct mouse button has been pressed for pop menu
-				if (e.isPopupTrigger()){
-					doPop(e);
-				}
-				
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger()){
-					doPop(e);
-				}
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger()){
-					doPop(e);
-				}
-				
-			}
-			
-			private void doPop(MouseEvent e){
-				PopUp menu = new PopUp(e.getComponent());
-				menu.show(e.getComponent(), e.getX(), e.getY());
-				
-			}
-			
-		});
+		PopUpListener popListen = new PopUpListener(this);
+		newTask.addMouseListener(popListen);
+		
 		mainPanel.add(newTask);
 		tasks.add(newTask);
 		
@@ -192,100 +160,7 @@ public class AppMain extends JFrame{
 		
 	}
 	
-	//Inner class for the popmenu
-		public class PopUp extends JPopupMenu{
-			
-			private JMenuItem editItem;
-			private JMenuItem deleteItem;
-			private Component comp;
-			
-			public PopUp(Component c){
-				comp = c;
-				editItem = new JMenuItem("Edit");
-				editItem.addMouseListener(new MouseListener(){
-
-					@Override
-					public void mouseClicked(MouseEvent arg0) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void mouseEntered(MouseEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void mouseExited(MouseEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void mousePressed(MouseEvent e) {
-						Task selectedTask = (Task) comp;
-						System.out.println(selectedTask.toString());
-						TaskDialog editTask = new TaskDialog(selectedTask.toString(), selectedTask.getCategory());
-						int result = JOptionPane.showConfirmDialog(null, editTask, "Edit Task Information",
-								JOptionPane.OK_CANCEL_OPTION);
-						if (result == JOptionPane.OK_OPTION){
-							selectedTask.setName(editTask.getText());
-							selectedTask.setCategory(editTask.getCategory());
-							repaint();
-							pack();
-						}
-						
-					}
-
-					@Override
-					public void mouseReleased(MouseEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
-					
-				});
-				deleteItem = new JMenuItem("Delete");
-				deleteItem.addMouseListener(new MouseListener(){
-
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void mouseEntered(MouseEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void mouseExited(MouseEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void mousePressed(MouseEvent e) {
-						System.out.println(deleteTask(c) + " deleted");
-						
-					}
-
-					@Override
-					public void mouseReleased(MouseEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
-					
-				});
-				
-				add(editItem);
-				add(deleteItem);
-			}
-			
-			
-		}
+	
 		
 		public class FrameListener implements WindowListener {
 			
@@ -305,14 +180,13 @@ public class AppMain extends JFrame{
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				File newFile = newFile = new File("C:\\Users\\Lenovo\\Documents\\task.txt");
 				
-				newFile.getParentFile().mkdirs();
+				dataFile.getParentFile().mkdirs();
 				
 				
 				
 				try {
-					PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(newFile)));
+					PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(dataFile)));
 					
 					System.out.println(tasks.isEmpty());
 					
@@ -347,7 +221,24 @@ public class AppMain extends JFrame{
 
 			@Override
 			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
+				if (dataFile.exists() && !dataFile.isDirectory()){
+					
+					try {
+						BufferedReader br = new BufferedReader(new FileReader(dataFile));
+						String line;
+						while ((line = br.readLine()) != null){
+							String[] tempArray = line.split(" ");
+							
+						}
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+				}
 
 			}
 			

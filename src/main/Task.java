@@ -34,8 +34,47 @@ public class Task extends JPanel{
 	
 	private Timer timer;
 	
+	
+	
+	/**
+	 * 
+	 * Constructor for creating object with no existing data
+	 * @param name
+	 * @param category
+	 */
 	public Task(String name, String category){
 		
+		setFrame(name, category);
+		duration = 0;
+	
+		
+	}
+	
+	/**
+	 * 
+	 * Constructor for creating object with existing data
+	 * @param name
+	 * @param category
+	 * @param time
+	 */
+	public Task(String name, String category, long time){
+		
+		
+		setFrame(name, category);
+		duration = time;
+		
+		
+	}
+	
+	
+	
+	/**
+	 * Sets the frame, saves constructor data within appropriate vars
+	 * @param name
+	 * @param category
+	 */
+	public void setFrame(String name, String category){
+
 		setSize(1000,100);
 		taskCategory = category;
 		taskName = name;
@@ -48,14 +87,6 @@ public class Task extends JPanel{
 				"<html><font color='gray'>" +taskCategory + "</font></html>"));
 		
 		timerOn = false;
-		duration = 0;
-		
-		
-		
-		
-		
-		
-		
 	}
 	
 	public void setWidgets(){
@@ -113,7 +144,10 @@ public class Task extends JPanel{
 		});
 		
 			
-		timeLbl = new JLabel("0:0");
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(duration) % 60;
+		long hours =  TimeUnit.MILLISECONDS.toHours(duration);
+		
+		timeLbl =  new JLabel(hours + ":" + minutes);
 		timeLbl.setFont(font);
 		timeLbl.setBorder(emptyBorder);
 		
