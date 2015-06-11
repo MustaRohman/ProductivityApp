@@ -62,42 +62,42 @@ public class TaskPanel extends JPanel{
 		duration = time;
 		setFrame(name, category);
 		
-		
-		
 	}
-	
-	
 	
 	/**
 	 * Sets the frame, saves constructor data within appropriate vars
 	 * @param name
 	 * @param category
 	 */
-	public void setFrame(String name, String category){
+	private void setFrame(String name, String category){
 
 		setSize(1000,100);
 		taskCategory = category;
 		taskName = name;
 		
-
+		setBackground(Color.BLACK);
+		
 		setWidgets();
 		setLayout();
 		
-		setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.gray),
+		
+		setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.gray, 5),
 				"<html><font color='gray'>" +taskCategory + "</font></html>"));
 		
 		timerOn = false;
 	}
 	
-	public void setWidgets(){
-		//The font for all widgets
-		Font font = new Font("Calibri",Font.BOLD, 20);
-		
+	private void setWidgets(){
+
+		//Updates the timer label every minute
 		timer = new Timer(60000, new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				updateTime();
 			}
 		});
+		
+		//The font for all widgets
+		Font font = new Font("Calibri",Font.BOLD, 20);
 		
 		Border empty = BorderFactory.createEmptyBorder(7,15,7,15);
 		Border emptyBorder = BorderFactory.createCompoundBorder(empty, null);
@@ -107,23 +107,27 @@ public class TaskPanel extends JPanel{
 		
 		taskLbl = new JLabel(taskName);
 		taskLbl.setFont(font);
+		taskLbl.setForeground(Color.WHITE);
 		taskLbl.setBorder(emptyBorder);
 		
 		timerBtn = new JButton("Off");
-		timerBtn.setSize(new Dimension(40,25));
+		timerBtn.setFocusable(false);
+		timerBtn.setPreferredSize(new Dimension(80,40));
 		timerBtn.setFont(font);
+		timerBtn.setForeground(Color.white);
+		timerBtn.setBackground(Color.BLACK);
 		timerBtn.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
 				if (!timerOn){
 					startTime = System.currentTimeMillis();
 					timerOn = true;
-					timerBtn.setBackground(Color.GREEN);
+					timerBtn.setForeground(Color.RED);
 					timerBtn.setText("On");
 					
 					timer.start();
 					
-					setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GREEN),
+					setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.RED, 5),
 							"<html><font color='gray'>" +taskCategory + "</font></html>"));
 				} else {    
 					endTime = System.currentTimeMillis();
@@ -132,10 +136,12 @@ public class TaskPanel extends JPanel{
 					timer.stop();
 				
 					timerOn = false;
-					timerBtn.setBackground(new JButton().getBackground());
+					timerBtn.setForeground(Color.WHITE);
 					timerBtn.setText("Off");
 					
-					setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY),
+					timerBtn.setSize(new Dimension(40,25));
+					
+					setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY, 5),
 							"<html><font color='gray'>" +taskCategory + "</font></html>"));
 				}
 			}
@@ -149,13 +155,12 @@ public class TaskPanel extends JPanel{
 		
 		timeLbl =  new JLabel(hours + ":" + minutes);
 		timeLbl.setFont(font);
-		timeLbl.setBorder(emptyBorder);
-		
-			
+		timeLbl.setForeground(Color.WHITE);
+		timeLbl.setBorder(emptyBorder);	
 		
 	}
 	
-	public void setLayout(){
+	private void setLayout(){
 		setLayout(new BorderLayout());
 //		GridBagConstraints c = new GridBagConstraints();
 
@@ -166,9 +171,10 @@ public class TaskPanel extends JPanel{
 //		c.weightx = 1;
 		
 		JPanel eastPanel = new JPanel();
-		eastPanel.setLayout(new GridLayout(0,2));
-		eastPanel.add(timeLbl);
-		eastPanel.add(timerBtn);
+		eastPanel.setBackground(Color.BLACK);
+		eastPanel.setLayout(new BorderLayout());
+		eastPanel.add(timeLbl, BorderLayout.WEST);
+		eastPanel.add(timerBtn, BorderLayout.EAST);
 
 		add(taskLbl, BorderLayout.WEST);
 		
@@ -183,7 +189,7 @@ public class TaskPanel extends JPanel{
 	
 
 	
-	public void updateTime(){
+	private void updateTime(){
 		duration += System.currentTimeMillis() - startTime;
 		startTime = System.currentTimeMillis();
 		long minutes = TimeUnit.MILLISECONDS.toMinutes(duration) % 60;
@@ -213,8 +219,15 @@ public class TaskPanel extends JPanel{
 	
 	public void setCategory(String newCat){
 		taskCategory = newCat;
-		setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.gray),
+		setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.gray, 5),
 				"<html><font color='gray'>" +taskCategory + "</font></html>"));
+		repaint();
+	}
+	
+	public void resetDuration(){
+		duration = 0;
+	
+		timeLbl.setText(0 + ":" + 0);
 		repaint();
 	}
 

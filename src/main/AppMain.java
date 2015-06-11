@@ -7,8 +7,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
@@ -23,14 +21,14 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
+import javax.swing.Timer;
 
-import org.jfree.data.gantt.Task;
 import org.jfree.data.general.DefaultPieDataset;
 
 public class AppMain extends JFrame{
@@ -39,12 +37,13 @@ public class AppMain extends JFrame{
 	private ArrayList<TaskPanel> tasks;
 	//keeps track of task panel objects to that we can access task information
 	
-	private static File dataFile = new File("C:\\Users\\Lenovo\\Documents\\task.txt"); ;
+	private static File dataFile = new File("C:\\Users\\Lenovo\\Documents\\taskDetails.txt"); ;
 	
 	public AppMain(){
 		
 		super("Time Tracker");
 		setSize(300,100);
+		getContentPane().setBackground(Color.black);
 		setMinimumSize(new Dimension(300,175));
 		
 		tasks = new ArrayList<TaskPanel>();
@@ -61,10 +60,20 @@ public class AppMain extends JFrame{
 		Font font = new Font("Calibri",Font.BOLD, 20);
 		tasks = new ArrayList<TaskPanel>();
 		
-		JMenuBar menuBar = new JMenuBar();
+		Timer timer = new Timer(60000, new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				
+			}
+		});
 		
-		JMenuItem addJmi = new JMenuItem("+");
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBackground(Color.BLACK);
+		menuBar.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+		
+		JMenuItem addJmi = new JMenuItem("Add Task");
 		addJmi.setFont(font);
+		addJmi.setForeground(Color.white);
+		addJmi.setBackground(Color.BLACK);
 		addJmi.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
 		addJmi.addActionListener(new ActionListener(){
 			
@@ -83,6 +92,8 @@ public class AppMain extends JFrame{
 		
 		JMenuItem chartJmi = new JMenuItem("Chart");
 		chartJmi.setFont(font);
+		chartJmi.setForeground(Color.white);
+		chartJmi.setBackground(Color.BLACK);
 		chartJmi.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 1, Color.GRAY));
 		chartJmi.addActionListener(new ActionListener(){
 			
@@ -173,14 +184,18 @@ public class AppMain extends JFrame{
 			}
 		}
 		
-		
 		return null;
 		
 	}
 	
-	
+	public void deleteAll(){
+		mainPanel.removeAll();
+		tasks.clear();
+		repaint();
+		pack();
+	}
 		
-		public class FrameListener implements WindowListener {
+	public class FrameListener implements WindowListener {
 			
 
 
@@ -200,8 +215,6 @@ public class AppMain extends JFrame{
 			public void windowClosing(WindowEvent e) {
 				
 				dataFile.getParentFile().mkdirs();
-				
-				
 				
 				try {
 					PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(dataFile)));
@@ -245,7 +258,7 @@ public class AppMain extends JFrame{
 						BufferedReader br = new BufferedReader(new FileReader(dataFile));
 						String line;
 						while ((line = br.readLine()) != null){
-							String[] tempArray = line.split(" ");
+							String[] tempArray = line.split(",");
 							TaskPanel newTask = addTask(tempArray[0], tempArray[1], tempArray[2]);
 							System.out.println(newTask.getTime());
 						}
@@ -264,7 +277,7 @@ public class AppMain extends JFrame{
 			
 			public void printTask(TaskPanel task, PrintWriter pw){
 				
-				String taskDetail = task.toString() + " " + task.getCategory() + " " +  task.getTime();
+				String taskDetail = task.toString() + "," + task.getCategory() + "," +  task.getTime();
 				pw.println(taskDetail);
 				
 				pw.flush();

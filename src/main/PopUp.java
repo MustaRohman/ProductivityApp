@@ -1,6 +1,8 @@
 package main;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -11,11 +13,19 @@ import javax.swing.JPopupMenu;
 public class PopUp extends JPopupMenu {
 
 	private JMenuItem editItem;
+	private JMenuItem resetItem;
 	private JMenuItem deleteItem;
+	private JMenuItem delAllItem;
+	
+	private TaskPanel selectedTask;
+	
 	private Component comp;
+	private AppMain mainFrame;
 	
 	public PopUp(Component c, AppMain main){
+		mainFrame = main;
 		comp = c;
+		selectedTask = (TaskPanel) c;
 		editItem = new JMenuItem("Edit");
 		editItem.addMouseListener(new MouseListener(){
 
@@ -39,7 +49,7 @@ public class PopUp extends JPopupMenu {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				TaskPanel selectedTask = (TaskPanel) comp;
+				
 				System.out.println(selectedTask.toString());
 				TaskDialog editTask = new TaskDialog(selectedTask.toString(), selectedTask.getCategory());
 				int result = JOptionPane.showConfirmDialog(null, editTask, "Edit Task Information",
@@ -49,6 +59,7 @@ public class PopUp extends JPopupMenu {
 					selectedTask.setCategory(editTask.getCategory());
 					repaint();
 					pack();
+					main.pack();
 				}
 				
 			}
@@ -95,8 +106,37 @@ public class PopUp extends JPopupMenu {
 			
 		});
 		
+		delAllItem = new JMenuItem("Delete All");
+		delAllItem.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int option = JOptionPane.showConfirmDialog(null, 
+						"Are you sure you want to delete all tasks?");
+				if (option == JOptionPane.OK_OPTION){
+					mainFrame.deleteAll();
+				}
+				
+			}
+			
+		});
+		
+		resetItem = new JMenuItem("Reset Time");
+		resetItem.addActionListener(new ActionListener(){
+			
+			public void actionPerformed(ActionEvent e){
+					selectedTask.resetDuration();
+				
+			}
+			
+		});
+		
+		
+		
 		add(editItem);
+		add(resetItem);
 		add(deleteItem);
+		add(delAllItem);
 	}
 	
 }
