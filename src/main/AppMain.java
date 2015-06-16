@@ -1,14 +1,24 @@
 package main;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,10 +28,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -47,7 +62,7 @@ public class AppMain extends JFrame{
 		setMinimumSize(new Dimension(300,175));
 		
 		tasks = new ArrayList<TaskPanel>();
-		
+
 		addWindowListener(new FrameListener());
 		
 		setFrame();
@@ -58,13 +73,23 @@ public class AppMain extends JFrame{
 	public void setFrame(){
 		
 		Font font = new Font("Calibri",Font.BOLD, 20);
+		//Sets up main font
+		
+		setTrayIcon();
+		//Sets icon in System tray
+		
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File("C:\\Users\\Lenovo\\Pictures\\clock.png"));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		setIconImage(img);
+		//Sets the icon for the main application
+		
+		
 		tasks = new ArrayList<TaskPanel>();
 		
-		Timer timer = new Timer(60000, new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				
-			}
-		});
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBackground(Color.BLACK);
@@ -104,9 +129,31 @@ public class AppMain extends JFrame{
 							"Error", JOptionPane.INFORMATION_MESSAGE);
 				} else{
 					DefaultPieDataset dataset = new DefaultPieDataset();
+					System.out.println("Time data:");
+					
+					HashMap<String, Double> catData = new HashMap<String, Double>();
+					
+					for (String s : TaskPanel.categories){
+						catData.put(s, new Double(0));
+					}
+					
+					
 					for (TaskPanel t: tasks){
 						
-						dataset.setValue(t.getCategory(), t.getTime());
+						catData.put(t.getCategory(), 
+								catData.get(t.getCategory()) + (double) t.getTime());
+						//Increments the time for the appropriate category with the task duration
+						
+				
+					}
+					
+					
+					Iterator<Entry<String, Double>> it = catData.entrySet().iterator();
+					
+					while (it.hasNext()){
+						Map.Entry pair = (Map.Entry) it.next();
+						dataset.setValue((Comparable) pair.getKey(), (Double) pair.getValue()); 
+						
 					}
 					
 					PieChart pie = new PieChart("Chart", dataset);
@@ -127,6 +174,84 @@ public class AppMain extends JFrame{
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
+	}
+	
+	public void setTrayIcon(){
+		if (SystemTray.isSupported()) {
+
+		    SystemTray tray = SystemTray.getSystemTray();
+		    Image image = Toolkit.getDefaultToolkit().getImage("C:\\Users\\Lenovo\\Pictures\\clock.png");
+		            
+		    PopupMenu popup = new PopupMenu();
+		    MenuItem defaultItem = new MenuItem("Exit");
+		    defaultItem.addActionListener(new ActionListener(){
+		    	
+		    	 public void actionPerformed(ActionEvent e) {
+			            System.out.println("Exiting...");
+			            System.exit(0);
+			        }
+		    	
+		    });
+		    popup.add(defaultItem);
+		    
+		    final  TrayIcon trayIcon = new TrayIcon(image, "Time Tracker", popup);
+		    
+		    MouseListener mouseListener = new MouseListener() {
+		                
+		        public void mouseClicked(MouseEvent e) {
+	
+		        	TaskPanel tp = null;
+		        	for (TaskPanel t: tasks){
+		        		if (t.isOn()){
+		        			tp = t;
+		        		}
+		        	}
+		        	
+		        	if (tp != null){
+		        		trayIcon.displayMessage(tp.toString(), tp.getTimeDisplay(),TrayIcon.MessageType.INFO);
+		        	}
+		        }
+
+		        public void mouseEntered(MouseEvent e) {
+		            System.out.println("Tray Icon - Mouse entered!");                 
+		        }
+
+		        public void mouseExited(MouseEvent e) {
+		            System.out.println("Tray Icon - Mouse exited!");                 
+		        }
+
+		        public void mousePressed(MouseEvent e) {
+		            System.out.println("Tray Icon - Mouse pressed!");                 
+		        }
+
+		        public void mouseReleased(MouseEvent e) {
+		            System.out.println("Tray Icon - Mouse released!");                 
+		        }
+		    };
+
+		    ActionListener actionListener = new ActionListener() {
+		        public void actionPerformed(ActionEvent e) {
+		            trayIcon.displayMessage("Action Event", 
+		                "An Action Event Has Been Performed!",
+		                TrayIcon.MessageType.INFO);
+		        }
+		    };
+		            
+		    trayIcon.setImageAutoSize(true);
+		    trayIcon.addActionListener(actionListener);
+		    trayIcon.addMouseListener(mouseListener);
+
+		    try {
+		        tray.add(trayIcon);
+		    } catch (AWTException e) {
+		        System.err.println("TrayIcon could not be added.");
+		    }
+
+		} else {
+
+		    //  System Tray is not supported
+
+		}
 	}
 	
 	/**
@@ -260,8 +385,11 @@ public class AppMain extends JFrame{
 						while ((line = br.readLine()) != null){
 							String[] tempArray = line.split(",");
 							TaskPanel newTask = addTask(tempArray[0], tempArray[1], tempArray[2]);
-							System.out.println(newTask.getTime());
+							System.out.println(newTask.toString() + " Duration : " + newTask.getTime());
+							setLocationRelativeTo(null);
 						}
+						System.out.println("Task Data Loaded");
+						
 						
 					} catch (FileNotFoundException e1) {
 						// TODO Auto-generated catch block
@@ -285,12 +413,12 @@ public class AppMain extends JFrame{
 				System.out.println(taskDetail);
 			}
 
-		}	
+		} //End of FrameListener	
 	
 	
 	public static void main (String args[]){
 		
 		new AppMain();
-	}
+	}//End of main
 	
-}
+}//End of AppMain

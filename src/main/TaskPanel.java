@@ -209,6 +209,10 @@ public class TaskPanel extends JPanel{
 		return duration;
 	}
 	
+	public String getTimeDisplay(){
+		return timeLbl.getText();
+	}
+	
 	public String getCategory(){
 		return taskCategory;
 	}
@@ -229,6 +233,10 @@ public class TaskPanel extends JPanel{
 	
 		timeLbl.setText(0 + ":" + 0);
 		repaint();
+	}
+	
+	public boolean isOn(){
+		return timerOn;
 	}
 
 
