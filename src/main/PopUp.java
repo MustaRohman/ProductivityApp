@@ -106,20 +106,7 @@ public class PopUp extends JPopupMenu {
 			
 		});
 		
-		delAllItem = new JMenuItem("Delete All");
-		delAllItem.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int option = JOptionPane.showConfirmDialog(null, 
-						"Are you sure you want to delete all tasks?");
-				if (option == JOptionPane.OK_OPTION){
-					mainFrame.deleteAll();
-				}
-				
-			}
-			
-		});
+		
 		
 		resetItem = new JMenuItem("Reset Time");
 		resetItem.addActionListener(new ActionListener(){
@@ -136,7 +123,6 @@ public class PopUp extends JPopupMenu {
 		add(editItem);
 		add(resetItem);
 		add(deleteItem);
-		add(delAllItem);
 	}
 	
 }

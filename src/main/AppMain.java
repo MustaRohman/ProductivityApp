@@ -27,8 +27,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -37,12 +39,13 @@ import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -52,7 +55,10 @@ public class AppMain extends JFrame{
 	private ArrayList<TaskPanel> tasks;
 	//keeps track of task panel objects to that we can access task information
 	
-	private static File dataFile = new File("C:\\Users\\Lenovo\\Documents\\taskDetails.txt"); ;
+	private final SimpleDateFormat SDF = new SimpleDateFormat("MM-dd-yyyy");
+	private Font font = new Font("Calibri",Font.BOLD, 20);
+	
+	private File dataFile = new File("C:\\Users\\Lenovo\\Documents\\TimeTracker\\taskDetails");
 	
 	public AppMain(){
 		
@@ -62,7 +68,14 @@ public class AppMain extends JFrame{
 		setMinimumSize(new Dimension(300,175));
 		
 		tasks = new ArrayList<TaskPanel>();
-
+		
+		//Initialises dataFile with current date
+		Calendar cal = Calendar.getInstance();
+		String path = dataFile.getAbsolutePath();
+		dataFile = new File(path + SDF.format(cal.getTime()) + ".txt");
+		
+		
+		
 		addWindowListener(new FrameListener());
 		
 		setFrame();
@@ -72,11 +85,12 @@ public class AppMain extends JFrame{
 	
 	public void setFrame(){
 		
-		Font font = new Font("Calibri",Font.BOLD, 20);
-		//Sets up main font
+		tasks = new ArrayList<TaskPanel>();
+		
 		
 		setTrayIcon();
 		//Sets icon in System tray
+		
 		
 		BufferedImage img = null;
 		try {
@@ -86,20 +100,18 @@ public class AppMain extends JFrame{
 		}
 		setIconImage(img);
 		//Sets the icon for the main application
-		
-		
-		tasks = new ArrayList<TaskPanel>();
+
 		
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBackground(Color.BLACK);
 		menuBar.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 		
+		JMenu tasksJm = new JMenu("Tasks");
+		formatComponent(tasksJm);
+		
 		JMenuItem addJmi = new JMenuItem("Add Task");
-		addJmi.setFont(font);
-		addJmi.setForeground(Color.white);
-		addJmi.setBackground(Color.BLACK);
-		addJmi.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
+		formatComponent(addJmi);
 		addJmi.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
@@ -114,12 +126,47 @@ public class AppMain extends JFrame{
 			}
 			
 		});
+		JMenuItem delAllJmi = new JMenuItem("Delete All Tasks");
+		formatComponent(delAllJmi);
+		delAllJmi.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int option = JOptionPane.showConfirmDialog(null, 
+						"Are you sure you want to delete all tasks?");
+				if (option == JOptionPane.OK_OPTION){
+					deleteAll();
+				}
+				
+			}
+			
+		});
+		
+		JMenuItem resetAllJmi = new JMenuItem("Reset All Tasks");
+		formatComponent(resetAllJmi);
+		resetAllJmi.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (TaskPanel tp: tasks){
+					tp.resetDuration();
+				}
+				
+				JOptionPane.showMessageDialog(null, "Times for all tasks have been reset");
+				
+			}
+			
+		});
+		
+		tasksJm.add(addJmi);
+		tasksJm.add(resetAllJmi);
+		tasksJm.add(delAllJmi);
+		
+		JMenu dataJm = new JMenu("Data");
+		formatComponent(dataJm);
 		
 		JMenuItem chartJmi = new JMenuItem("Chart");
-		chartJmi.setFont(font);
-		chartJmi.setForeground(Color.white);
-		chartJmi.setBackground(Color.BLACK);
-		chartJmi.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 1, Color.GRAY));
+		formatComponent(chartJmi);
 		chartJmi.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
@@ -162,8 +209,10 @@ public class AppMain extends JFrame{
 			}
 		});
 		
-		menuBar.add(addJmi);
-		menuBar.add(chartJmi);
+		dataJm.add(chartJmi);
+		
+		menuBar.add(tasksJm);
+		menuBar.add(dataJm);
 		setJMenuBar(menuBar);
 		
 		mainPanel = new JPanel();
@@ -194,12 +243,22 @@ public class AppMain extends JFrame{
 		    });
 		    popup.add(defaultItem);
 		    
-		    final  TrayIcon trayIcon = new TrayIcon(image, "Time Tracker", popup);
-		    
-		    MouseListener mouseListener = new MouseListener() {
-		                
-		        public void mouseClicked(MouseEvent e) {
-	
+		    final  TrayIcon trayIcon = new TrayIcon(image, "Time Tracker", popup);	             
+		            
+		    trayIcon.setImageAutoSize(true);
+		    trayIcon.addActionListener(new ActionListener(){
+		    	
+		    	 public void actionPerformed(ActionEvent e) {
+			            trayIcon.displayMessage("Action Event", 
+			                "An Action Event Has Been Performed!",
+			                TrayIcon.MessageType.INFO);
+			        }
+		    	 
+		    });
+		    trayIcon.addMouseListener(new MouseListener(){
+		    	
+		    	public void mouseClicked(MouseEvent e) {
+		    		
 		        	TaskPanel tp = null;
 		        	for (TaskPanel t: tasks){
 		        		if (t.isOn()){
@@ -227,19 +286,8 @@ public class AppMain extends JFrame{
 		        public void mouseReleased(MouseEvent e) {
 		            System.out.println("Tray Icon - Mouse released!");                 
 		        }
-		    };
-
-		    ActionListener actionListener = new ActionListener() {
-		        public void actionPerformed(ActionEvent e) {
-		            trayIcon.displayMessage("Action Event", 
-		                "An Action Event Has Been Performed!",
-		                TrayIcon.MessageType.INFO);
-		        }
-		    };
-		            
-		    trayIcon.setImageAutoSize(true);
-		    trayIcon.addActionListener(actionListener);
-		    trayIcon.addMouseListener(mouseListener);
+		    	
+		    });
 
 		    try {
 		        tray.add(trayIcon);
@@ -319,10 +367,30 @@ public class AppMain extends JFrame{
 		repaint();
 		pack();
 	}
+	
+	private void formatComponent(JComponent c){
 		
+		c.setFont(new Font("Calibri",Font.BOLD, 16));
+		c.setForeground(Color.WHITE);
+		c.setBackground(Color.BLACK);
+		c.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 1, Color.GRAY));
+	}
+		
+	
+	public void readFile(File file) throws IOException{
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		String line;
+		while ((line = br.readLine()) != null){
+			String[] tempArray = line.split(",");
+			TaskPanel newTask = addTask(tempArray[0], tempArray[1], tempArray[2]);
+			System.out.println(newTask.toString() + " Duration : " + newTask.getTime());
+			setLocationRelativeTo(null);
+		}
+		System.out.println("Task Data Loaded");
+	}
+	
 	public class FrameListener implements WindowListener {
 			
-
 
 			@Override
 			public void windowActivated(WindowEvent e) {
@@ -339,6 +407,8 @@ public class AppMain extends JFrame{
 			@Override
 			public void windowClosing(WindowEvent e) {
 				
+				
+				
 				dataFile.getParentFile().mkdirs();
 				
 				try {
@@ -354,8 +424,10 @@ public class AppMain extends JFrame{
 					System.out.println("IO error has occured");
 				}
 				
+				
+				
 
-			}
+			}// End of method
 
 			@Override
 			public void windowDeactivated(WindowEvent e) {
@@ -379,29 +451,30 @@ public class AppMain extends JFrame{
 			public void windowOpened(WindowEvent e) {
 					if (dataFile.exists() && !dataFile.isDirectory()){
 					
-					try {
-						BufferedReader br = new BufferedReader(new FileReader(dataFile));
-						String line;
-						while ((line = br.readLine()) != null){
-							String[] tempArray = line.split(",");
-							TaskPanel newTask = addTask(tempArray[0], tempArray[1], tempArray[2]);
-							System.out.println(newTask.toString() + " Duration : " + newTask.getTime());
-							setLocationRelativeTo(null);
+						try {
+							readFile(dataFile);	
+							
+						} catch (FileNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
-						System.out.println("Task Data Loaded");
-						
-						
-					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
 					
-				}
+				} else {
+					
+				File previousFile = new File("C:\\Users\\Lenovo\\Documents\\TimeTracker\\taskDetails");
+				
+				
+					
+				}//End of If/Else 
+										
+				System.out.println(dataFile.lastModified());
+				
+				System.out.println(SDF.format(dataFile.lastModified()));
 
-			}
+			}// End of method
 			
 			public void printTask(TaskPanel task, PrintWriter pw){
 				
@@ -413,7 +486,7 @@ public class AppMain extends JFrame{
 				System.out.println(taskDetail);
 			}
 
-		} //End of FrameListener	
+		} //End of FrameListener Class
 	
 	
 	public static void main (String args[]){
@@ -421,4 +494,4 @@ public class AppMain extends JFrame{
 		new AppMain();
 	}//End of main
 	
-}//End of AppMain
+}//End of AppMain Class
