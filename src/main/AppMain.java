@@ -54,18 +54,19 @@ public class AppMain extends JFrame{
 	private JPanel mainPanel;
 	private ArrayList<TaskPanel> tasks;
 	//keeps track of task panel objects to that we can access task information
-	
 	private final SimpleDateFormat SDF = new SimpleDateFormat("MM-dd-yyyy");
-	private Font font = new Font("Calibri",Font.BOLD, 20);
-	
+	//Used to format date data
 	private File dataFile = new File("C:\\Users\\Lenovo\\Documents\\TimeTracker\\taskDetails");
+	//Location for Task data
+	
+	private Color green = new Color(0,172,28);
 	
 	public AppMain(){
 		
 		super("Time Tracker");
 		setSize(300,100);
-		getContentPane().setBackground(Color.black);
-		setMinimumSize(new Dimension(300,175));
+		getContentPane().setBackground(Color.WHITE);
+		setMinimumSize(new Dimension(400,175));
 		
 		tasks = new ArrayList<TaskPanel>();
 		
@@ -73,13 +74,9 @@ public class AppMain extends JFrame{
 		Calendar cal = Calendar.getInstance();
 		String path = dataFile.getAbsolutePath();
 		dataFile = new File(path + SDF.format(cal.getTime()) + ".txt");
-		
-		
-		
-		addWindowListener(new FrameListener());
-		
-		setFrame();
-		
+
+		addWindowListener(new FrameListener());		
+		setFrame();		
 		setVisible(true);
 	}
 	
@@ -104,8 +101,8 @@ public class AppMain extends JFrame{
 		
 		
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBackground(Color.BLACK);
-		menuBar.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+		menuBar.setBackground(green);
+		menuBar.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3));
 		
 		JMenu tasksJm = new JMenu("Tasks");
 		formatComponent(tasksJm);
@@ -175,35 +172,10 @@ public class AppMain extends JFrame{
 					JOptionPane.showMessageDialog(null, "No tasks have been added!", 
 							"Error", JOptionPane.INFORMATION_MESSAGE);
 				} else{
-					DefaultPieDataset dataset = new DefaultPieDataset();
-					System.out.println("Time data:");
-					
-					HashMap<String, Double> catData = new HashMap<String, Double>();
-					
-					for (String s : TaskPanel.categories){
-						catData.put(s, new Double(0));
-					}
-					
-					
-					for (TaskPanel t: tasks){
-						
-						catData.put(t.getCategory(), 
-								catData.get(t.getCategory()) + (double) t.getTime());
-						//Increments the time for the appropriate category with the task duration
-						
 				
-					}
 					
-					
-					Iterator<Entry<String, Double>> it = catData.entrySet().iterator();
-					
-					while (it.hasNext()){
-						Map.Entry pair = (Map.Entry) it.next();
-						dataset.setValue((Comparable) pair.getKey(), (Double) pair.getValue()); 
-						
-					}
-					
-					PieChart pie = new PieChart("Chart", dataset);
+					PieChart pie = new PieChart("Chart", tasks);
+					//Creates new PieChart using the dataset
 				}
 				
 			}
@@ -370,19 +342,32 @@ public class AppMain extends JFrame{
 	
 	private void formatComponent(JComponent c){
 		
-		c.setFont(new Font("Calibri",Font.BOLD, 16));
+		c.setFont(new Font("Calibri",Font.PLAIN, 22));
 		c.setForeground(Color.WHITE);
-		c.setBackground(Color.BLACK);
-		c.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 1, Color.GRAY));
+		c.setBackground(green);
+		c.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.white));
+		
 	}
 		
 	
-	public void readFile(File file) throws IOException{
+	/**
+	 * @param file
+	 * @param bool - True for taking data from current data file, false for using task objects
+	 * from previous data file
+	 * @throws IOException
+	 */
+	public void readFile(File file, boolean bool) throws IOException{
+		
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		String line;
 		while ((line = br.readLine()) != null){
 			String[] tempArray = line.split(",");
-			TaskPanel newTask = addTask(tempArray[0], tempArray[1], tempArray[2]);
+			TaskPanel newTask = null;
+			if (bool){
+				newTask = addTask(tempArray[0], tempArray[1], tempArray[2]);
+			} else {
+				newTask = addTask(tempArray[0], tempArray[1], "0");
+			}
 			System.out.println(newTask.toString() + " Duration : " + newTask.getTime());
 			setLocationRelativeTo(null);
 		}
@@ -452,7 +437,7 @@ public class AppMain extends JFrame{
 					if (dataFile.exists() && !dataFile.isDirectory()){
 					
 						try {
-							readFile(dataFile);	
+							readFile(dataFile, true);	
 							
 						} catch (FileNotFoundException e1) {
 							// TODO Auto-generated catch block
@@ -464,15 +449,19 @@ public class AppMain extends JFrame{
 					
 				} else {
 					
-				File previousFile = new File("C:\\Users\\Lenovo\\Documents\\TimeTracker\\taskDetails");
+				File prevFile = new File("C:\\Users\\Lenovo\\Documents\\TimeTracker\\taskDetails");
 				
-				
+				if (prevFile.exists() && !prevFile.isDirectory()){
+					try {
+						readFile(prevFile, false);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
 					
 				}//End of If/Else 
 										
-				System.out.println(dataFile.lastModified());
-				
-				System.out.println(SDF.format(dataFile.lastModified()));
 
 			}// End of method
 			

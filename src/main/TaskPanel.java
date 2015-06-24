@@ -20,6 +20,9 @@ public class TaskPanel extends JPanel{
 	
 	public static String[] categories = {"Health", "Work", "Study", "Entertainment"};
 	
+	private static Color primaryColor = new Color(0,172,28);
+	private static Color secondaryColor = new Color(232, 121, 0);
+	
 	private JButton timerBtn;
 	private JLabel timeLbl;
 	private JLabel taskLbl;
@@ -75,14 +78,15 @@ public class TaskPanel extends JPanel{
 		taskCategory = category;
 		taskName = name;
 		
-		setBackground(Color.BLACK);
+		setBackground(Color.WHITE);
 		
 		setWidgets();
 		setLayout();
 		
 		
-		setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.gray, 5),
+		setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(primaryColor, 2),
 				"<html><font color='gray'>" +taskCategory + "</font></html>"));
+		
 		
 		timerOn = false;
 	}
@@ -97,37 +101,40 @@ public class TaskPanel extends JPanel{
 		});
 		
 		//The font for all widgets
-		Font font = new Font("Calibri",Font.BOLD, 20);
+		Font font = new Font("Calibri",Font.PLAIN, 24);
 		
 		Border empty = BorderFactory.createEmptyBorder(7,15,7,15);
 		Border emptyBorder = BorderFactory.createCompoundBorder(empty, null);
 		
-		catLbl = new JLabel("<html><font color='gray'>" +taskCategory + "</font></html>");	
+		catLbl = new JLabel("<html><font color=0,172,28>" +taskCategory + "</font></html>");	
 		catLbl.setBorder(emptyBorder);
 		
 		taskLbl = new JLabel(taskName);
 		taskLbl.setFont(font);
-		taskLbl.setForeground(Color.WHITE);
+		taskLbl.setForeground(new Color(0,172,28));
 		taskLbl.setBorder(emptyBorder);
 		
 		timerBtn = new JButton("Off");
 		timerBtn.setFocusable(false);
 		timerBtn.setPreferredSize(new Dimension(80,40));
 		timerBtn.setFont(font);
-		timerBtn.setForeground(Color.white);
-		timerBtn.setBackground(Color.BLACK);
+		timerBtn.setForeground(new Color(0,172,28));
+		timerBtn.setBackground(Color.WHITE);
 		timerBtn.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
 				if (!timerOn){
 					startTime = System.currentTimeMillis();
 					timerOn = true;
-					timerBtn.setForeground(Color.RED);
+					timerBtn.setForeground(secondaryColor);
 					timerBtn.setText("On");
+					
+					taskLbl.setForeground(secondaryColor);
+					timeLbl.setForeground(secondaryColor);
 					
 					timer.start();
 					
-					setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.RED, 5),
+					setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(secondaryColor, 2),
 							"<html><font color='gray'>" +taskCategory + "</font></html>"));
 				} else {    
 					endTime = System.currentTimeMillis();
@@ -136,12 +143,15 @@ public class TaskPanel extends JPanel{
 					timer.stop();
 				
 					timerOn = false;
-					timerBtn.setForeground(Color.WHITE);
+					timerBtn.setForeground(primaryColor);
 					timerBtn.setText("Off");
+					
+					taskLbl.setForeground(primaryColor);
+					timeLbl.setForeground(primaryColor);
 					
 					timerBtn.setSize(new Dimension(40,25));
 					
-					setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY, 5),
+					setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(primaryColor, 2),
 							"<html><font color='gray'>" +taskCategory + "</font></html>"));
 				}
 			}
@@ -155,7 +165,8 @@ public class TaskPanel extends JPanel{
 		
 		timeLbl =  new JLabel(hours + ":" + minutes);
 		timeLbl.setFont(font);
-		timeLbl.setForeground(Color.WHITE);
+		timeLbl.setForeground(new Color(0,172,28));
+		timeLbl.setBackground(Color.white);
 		timeLbl.setBorder(emptyBorder);	
 		
 	}
@@ -171,7 +182,7 @@ public class TaskPanel extends JPanel{
 //		c.weightx = 1;
 		
 		JPanel eastPanel = new JPanel();
-		eastPanel.setBackground(Color.BLACK);
+		eastPanel.setBackground(Color.WHITE);
 		eastPanel.setLayout(new BorderLayout());
 		eastPanel.add(timeLbl, BorderLayout.WEST);
 		eastPanel.add(timerBtn, BorderLayout.EAST);
