@@ -56,7 +56,7 @@ public class AppMain extends JFrame{
 	//keeps track of task panel objects to that we can access task information
 	private final SimpleDateFormat SDF = new SimpleDateFormat("MM-dd-yyyy");
 	//Used to format date data
-	private File dataFile = new File("C:\\Users\\Lenovo\\Documents\\TimeTracker\\taskDetails");
+	private File dataFile = new File("/Users/mustarohman/Documents/ProdAppData/taskDetails");
 	//Location for Task data
 	
 	private Color green = new Color(0,172,28);
@@ -93,10 +93,11 @@ public class AppMain extends JFrame{
 		try {
 			img = ImageIO.read(new File("C:\\Users\\Lenovo\\Pictures\\clock.png"));
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			System.out.println("Failed to find system tray image!");
 		}
+		
 		setIconImage(img);
-		//Sets the icon for the main application
+		//Sets the icon for the main application window
 
 		
 		
@@ -195,7 +196,8 @@ public class AppMain extends JFrame{
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-	}
+		
+	}//End of setFrame method
 	
 	public void setTrayIcon(){
 		if (SystemTray.isSupported()) {
